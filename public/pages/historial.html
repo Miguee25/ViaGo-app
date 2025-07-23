@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Historial de Viajes - Uber Style</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #121212;
+      color: #ffffff;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #ffffff;
+      margin-bottom: 30px;
+    }
+
+    .viaje {
+      background-color: #1e1e1e;
+      padding: 20px;
+      margin-bottom: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+      transition: transform 0.2s;
+    }
+
+    .viaje:hover {
+      transform: scale(1.02);
+    }
+
+    .dato {
+      margin: 5px 0;
+    }
+
+    .fecha {
+      color: #bbbbbb;
+      font-size: 0.9em;
+    }
+
+    .resultado {
+      font-weight: bold;
+      color: #1ed760;
+      font-size: 1.1em;
+    }
+
+    .no-viajes {
+      text-align: center;
+      color: #888;
+      font-style: italic;
+    }
+    .boton-secundario {
+  margin-top: 20px;
+  padding: 12px 24px;
+  background-color: #222;
+  color: #fff;
+  border: 2px solid #555;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.boton-secundario:hover {
+  background-color: #333;
+  border-color: #888;
+}
+  </style>
+</head>
+<body>
+  <h1>📍 Historial de Viajes</h1>
+  
+  <div style="text-align: center; margin-bottom: 20px;">
+  <button onclick="volverSimulador()" class="boton-secundario">🔙 Volver al Simulador</button>
+</div>
+
+<script>
+  function volverSimulador() {
+    window.location.href="/pages/index.html";
+  }
+</script>
+
+
+
+  <div id="contenedor-viajes">Cargando historial...</div>
+
+  <script>
+    fetch('/historial')
+      .then(res => res.json())
+      .then(data => {
+        const contenedor = document.getElementById('contenedor-viajes');
+        contenedor.innerHTML = '';
+
+        if (data.length === 0) {
+          contenedor.innerHTML = '<p class="no-viajes">No hay viajes registrados aún.</p>';
+          return;
+        }
+
+        data.forEach(viaje => {
+          const div = document.createElement('div');
+          div.className = 'viaje';
+
+          div.innerHTML = `
+            <div class="fecha">📅 ${viaje.fecha}</div>
+            <div class="dato">🚗 Tipo: <strong>${viaje.tipoServicio}</strong></div>
+            <div class="dato">🧳 Maletas: ${viaje.maletas}</div>
+            <div class="dato">👥 Pasajeros: ${viaje.cantidadPasajeros}</div>
+            <div class="dato">⏰ Hora: ${viaje.horaViaje}</div>
+            <div class="resultado">💰 ${viaje.resultado}</div>
+          `;
+
+          contenedor.appendChild(div);
+        });
+      })
+      .catch(error => {
+        document.getElementById('contenedor-viajes').innerHTML =
+          '<p class="no-viajes">Error al cargar el historial.</p>';
+        console.error(error);
+      });
+  </script>
+</body>
+</html>

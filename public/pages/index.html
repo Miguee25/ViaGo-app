@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+        <title>Simulador viaje</title>
+        <link rel="stylesheet" href="/styles/style5.css">
+    </head>
+    <body>
+        <div class="container">
+            <h1>ViaGo viajes</h1>
+            <form id="formularioViaje">
+
+                <label for="tipoServicio" >Tipo de servicio:</label>
+                <input type="tex" id="tipoServicio" name="tipoServicio" placeholder="carro básico o carro comfort" required/>
+
+                <label  for="Maletas" >¿Llevas maletas? (si/no):</label>
+                <input type="text" id="maletas" name="maletas" placeholder="si o no" required />
+
+                <label for ="hora">Hora del viaje (0 a 23):</label>
+                <input type="number" id="hora" name="hora" min="0" max="23" required />
+
+                <label for="cantidadPasajeros">Cantidad de pasajeros:</label>
+                <input type="number" id="cantidadPasajeros" name="cantidadPasajeros" min="1" max="4" required />
+
+                <button type="submit">Evaluar</button>
+
+               <button type="button" onclick="verHistorial()" class="boton-segundario">🕓 Ver el Historial de Viajes</button>
+
+               
+
+             </form>
+
+             <script>
+                function verHistorial(){
+                    window.location.href = "/pages/historial.html";
+                }
+             </script>
+
+            
+            <div id="resultado"></div>
+        </div>
+        <script src="/scripts/frontend5.js"></script>
+    </body>
+</html>

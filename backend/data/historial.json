@@ -1,0 +1,90 @@
+[
+  {
+    "tipoServicio": "carro comfort",
+    "maletas": "si",
+    "horaViaje": 22,
+    "cantidadPasajeros": 3,
+    "resultado": "El total de tu viaje es: $ 9.500,00",
+    "fecha": "12/7/2025, 12:51:37 p. m."
+  },
+  {
+    "tipoServicio": "carro basico",
+    "maletas": "no",
+    "horaViaje": 13,
+    "cantidadPasajeros": 2,
+    "resultado": "El total de tu viaje es: $ 1.500,00",
+    "fecha": "12/7/2025, 12:51:51 p. m."
+  },
+  {
+    "tipoServicio": "carro comfort",
+    "maletas": "no ",
+    "horaViaje": 23,
+    "cantidadPasajeros": 4,
+    "resultado": "El total de tu viaje es: $ 4.500,00",
+    "fecha": "12/7/2025, 12:58:02 p. m."
+  },
+  {
+    "tipoServicio": "Carro basico",
+    "maletas": "si ",
+    "horaViaje": 21,
+    "cantidadPasajeros": 4,
+    "resultado": "El total de tu viaje es: $ 8.000,00",
+    "fecha": "13/7/2025, 1:41:15 a. m."
+  },
+  {
+    "tipoServicio": "carro comfort",
+    "maletas": "si",
+    "horaViaje": 21,
+    "cantidadPasajeros": 4,
+    "resultado": "El total de tu viaje es: $ 9.500,00",
+    "fecha": "13/7/2025, 1:51:16 a. m."
+  },
+  {
+    "tipoServicio": "carro comfort",
+    "maletas": "si",
+    "horaViaje": 22,
+    "cantidadPasajeros": 4,
+    "resultado": "El total de tu viaje es: $ 9.500,00",
+    "fecha": "13/7/2025, 12:53:44 p. m."
+  },
+  {
+    "tipoServicio": "carro comfort",
+    "maletas": "si",
+    "horaViaje": 22,
+    "cantidadPasajeros": 4,
+    "resultado": "El total de tu viaje es: $ 9.500,00",
+    "fecha": "13/7/2025, 1:29:18 p. m."
+  },
+  {
+    "tipoServicio": "Carro básico",
+    "maletas": "Si",
+    "horaViaje": 6,
+    "cantidadPasajeros": 4,
+    "resultado": "El total de tu viaje es: $ 6.500,00",
+    "fecha": "13/7/2025, 1:53:42 p. m."
+  },
+  {
+    "tipoServicio": "Básico ",
+    "maletas": "No",
+    "horaViaje": 1,
+    "cantidadPasajeros": 1,
+    "resultado": "tipo de servicio no valido, usa 'Carro Básico' o 'Carro comfort'",
+    "fecha": "13/7/2025, 2:51:33 p. m."
+  },
+  {
+    "tipoServicio": "Carro básico ",
+    "maletas": "No",
+    "horaViaje": 1,
+    "cantidadPasajeros": 1,
+    "resultado": "El total de tu viaje es: $ 1.500,00",
+    "fecha": "13/7/2025, 2:51:43 p. m."
+  },
+  {
+    "tipoServicio": "Carro comfort",
+    "maletas": "No",
+    "horaViaje": 20,
+    "cantidadPasajeros": 1,
+    "resultado": "El total de tu viaje es: $ 3.000,00",
+    "fecha": "14/7/2025, 3:19:23 p. m."
+  }
+]

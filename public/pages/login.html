@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Iniciar sesión</title>
+  <link rel="stylesheet" href="../styles/style5.css">
+</head>
+<body class="fondo-oscuro">
+  <div class="contenedor-formulario">
+    <h2>Iniciar sesión</h2>
+
+    <form id="form-login">
+      <input type="email" id="correo" placeholder="Correo Electrónico" required><br>
+      <input type="password" id="clave" placeholder="Contraseña" required><br>
+      <button type="submit">Entrar</button>
+    </form>
+
+    <p id="mensaje"></p>
+  </div>
+
+  <script>
+    document.getElementById('form-login').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const correo = document.getElementById('correo').value;
+      const clave = document.getElementById('clave').value;
+
+      const respuesta = await fetch('/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ correo, clave })
+      });
+
+      const data = await respuesta.json();
+      document.getElementById('mensaje').innerText = data.mensaje;
+
+      if (data.exito) {
+        setTimeout(() => {
+          window.location.href = '/pages/mapa.html';
+        }, 1000);
+      }
+    });
+  </script>
+</body>
+</html>
