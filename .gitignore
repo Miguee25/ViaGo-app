@@ -1,1 +1,22 @@
+# Node modules (no subir nunca)
 node_modules/
+
+# Archivos sensibles o temporales
+.env
+.DS_Store
+
+# Config local de VSCode (opcional ignorar)
+.vscode/
+
+# Datos temporales o de prueba que no quieres subir
+backend/data/historial.json
+backend/data/usuarios.json
+backend/controllers/registrarUsuario.cjs
+backend/controllers/verificarUsuario.cjs
+public/pages/historial.html
+public/pages/index.html
+backend/server/main5.cjs
+
+# Archivos generados automáticamente
+package-lock.json
+public/scripts/frontend5.js
