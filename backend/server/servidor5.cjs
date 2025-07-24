@@ -20,14 +20,16 @@ app.post('/evaluar', (req, res) => {
 
 app.post('/api/calcular-precio', async (req, res) => {
   try {
-    const { pais, distanciaKm } = req.body;
-    const resultado = await calcularPrecio(pais, distanciaKm);
+    const { pais, distanciaKm, tipoServicio } = req.body; // ✅ Agregado tipoServicio
+    const resultado = await calcularPrecio(pais, distanciaKm, tipoServicio);
     res.json(resultado);
   } catch (error) {
     console.error('❌ Error al calcular precio:', error.message);
     res.status(500).json({ error: 'No se pudo calcular el precio.' });
   }
 });
+
+
 
 app.post('/registro', async (req, res) => {
     const { nombre, correo, clave } = req.body;

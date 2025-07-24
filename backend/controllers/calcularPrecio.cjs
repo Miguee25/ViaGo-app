@@ -27,7 +27,7 @@ async function obtenerTasaGeneral(monedaLocal) {
 }
 
 // === Función principal ===
-async function calcularPrecio(pais, distanciaKm) {
+async function calcularPrecio(pais, distanciaKm, tipoServicio = 'basico') {
   const tarifa = tarifasPorPais[pais];
   if (!tarifa) {
     throw new Error(`País no soportado: ${pais}`);
@@ -40,7 +40,12 @@ async function calcularPrecio(pais, distanciaKm) {
     throw new Error(`No se pudo obtener la tasa de cambio para ${tarifa.moneda}`);
   }
 
-  const precioLocal = tarifa.precioPorKm * distanciaKm;
+  let recargoConforlocal = 0;
+  if (tipoServicio.toLowerCase() === 'confort') {
+    recargoConforlocal = 1 * tasaCambio;
+  }
+
+  const precioLocal = tarifa.precioPorKm * distanciaKm + recargoConforlocal;
   const precioUSD = precioLocal / tasaCambio;
 
   return {
@@ -50,7 +55,10 @@ async function calcularPrecio(pais, distanciaKm) {
     precioLocal: `${precioLocal.toFixed(2)} ${tarifa.moneda}`,
     precioUSD: `${precioUSD.toFixed(2)} USD`,
     tasaCambio: `1 USD = ${tasaCambio.toFixed(2)} ${tarifa.moneda}`,
-    fuenteTasa: fuente
+    fuenteTasa: fuente,
+    recargoConfortValor: recargoConforlocal,
+    recargoConfortTexto: `${recargoConforlocal.toFixed(2)} ${tarifa.moneda}`
+
   };
 }
 

@@ -105,6 +105,21 @@ button:hover {
   transform-origin: center;
 }
 
+.boton-volver {
+  display: inline-block;
+  margin-top: 10px;
+  background-color: #444;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}
+
+.boton-volver:hover {
+  background-color: #666;
+}
+
 @keyframes girarLogo {
   0% {
     transform: rotateY(0deg) scale(0.9);

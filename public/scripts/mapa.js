@@ -142,11 +142,15 @@ if (pais.toLowerCase().includes('united states') || pais.toLowerCase().includes(
   distanciaTexto = `${distanciaKm.toFixed(2)} km`;
 }
 
+const tipoServicio = document.getElementById("servicio")?.value || 'basico';
+
 const resPrecio = await fetch('/api/calcular-precio', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ pais, distanciaKm }) // se sigue enviando en KM al backend
+  body: JSON.stringify({ pais, distanciaKm, tipoServicio }) // ✅ agregado
 });
+
+
 
 const datos = await resPrecio.json();
 console.log("💡 Respuesta del backend:", datos);
@@ -160,6 +164,15 @@ safeSetText("precioLocal", `🏷 Precio local: ${datos.precioLocal}`);
 safeSetText("precioUSD", `💵 Precio en USD: ${datos.precioUSD}`);
 safeSetText("tasa", `🔁 Tasa de cambio: ${datos.tasaCambio}`);
 safeSetText("duracion", `⏱ Duración: ${duracionTexto}`);
+safeSetText("tipoServicioInfo", `🚘 Tipo de servicio: ${tipoServicio.charAt(0).toUpperCase() + tipoServicio.slice(1)}`);
+
+if (datos.recargoConfortValor > 0) {
+  safeSetText("recargo", `➕ Recargo Confort: ${datos.recargoConfortTexto}`);
+} else {
+  safeSetText("recargo", ""); // limpia si no aplica recargo
+}
+
+
 
 
     safeShow("viajeInfo");
@@ -302,4 +315,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const dir = e.target.value.trim();
     if (dir) buscarDireccionYColocar(dir, 'destino');
   });
+
+  document.getElementById('servicio')?.addEventListener('change', () => {
+  actualizarRuta(); // 👈 vuelve a recalcular todo si cambias el tipo de servicio
+});
 });
