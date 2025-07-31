@@ -1,4 +1,7 @@
 mapboxgl.accessToken = 'pk.eyJ1IjoibWlndWktMjUiLCJhIjoiY21kNjloMml6MDcyazJtb2xjNWNlcjJqYyJ9.IwxuSLB-7rc-c4jHaYKITg';
+// ✅ Conexión con el servidor Socket.io
+const socket = io();
+
 
 let map;
 let puntoA = null;
@@ -41,6 +44,85 @@ navigator.geolocation.getCurrentPosition(
       .setLngLat([lng, lat])
       .setPopup(new mapboxgl.Popup().setText('Estás aquí 📍'))
       .addTo(map);
+
+      const formulario = document.getElementById('formulario');
+      const btnExpandir = document.getElementById('btnExpandir');
+let expandido = false;
+
+btnExpandir.addEventListener('click', () => {
+  expandido = !expandido;
+
+  if (expandido) {
+    formulario.style.transform = 'translateX(-50%) scale(1)';
+    formulario.style.opacity = '1';
+    formulario.style.pointerEvents = 'auto';
+    btnExpandir.innerText = '🚖⬍';
+    btnExpandir.title = 'Ocultar formulario del viaje';
+  } else {
+    formulario.style.transform = 'translateX(-50%) scale(0.65)';
+    formulario.style.opacity = '0.8';
+    formulario.style.pointerEvents = 'auto';
+    btnExpandir.innerText = '🚖⇳';
+    btnExpandir.title = 'Mostrar formulario del viaje';
+  }
+});
+
+
+// Cuando el usuario toca el mapa (empezando a interactuar)
+map.on('touchstart', () => {
+  formulario.style.transform = 'translateX(-50%) scale(0.65)';
+  formulario.style.opacity = '0.4';
+  formulario.style.pointerEvents = 'none'; // evita que estorbe
+});
+
+// Cuando el usuario suelta el toque
+map.on('touchend', () => {
+  formulario.style.transform = 'translateX(-50%) scale(0.65)';
+  formulario.style.opacity = '1';
+  formulario.style.pointerEvents = 'auto';
+});
+
+let zoomAnterior = map.getZoom();
+let acercando = false;
+
+map.on('zoomstart', () => {
+  const zoomActual = map.getZoom();
+  acercando = zoomActual > zoomAnterior;
+
+  // Ocultar durante el zoom
+  formulario.style.opacity = '0';
+  formulario.style.pointerEvents = 'none';
+
+  // Si el usuario está acercando, lo hacemos pequeño inmediatamente
+  if (acercando && zoomActual >= 14.5) {
+    formulario.style.transform = 'translateX(-50%) scale(0.65)';
+  }
+});
+
+map.on('zoomend', () => {
+  const zoomLevel = map.getZoom();
+
+  formulario.style.display = 'block';
+  formulario.style.pointerEvents = 'auto';
+
+  // ⚙️ Siempre usamos escala minimalista
+  formulario.style.transform = 'translateX(-50%) scale(0.65)';
+
+  // Ajustamos opacidad según el zoom
+  if (zoomLevel >= 15) {
+    formulario.style.opacity = '0.6';
+  } else if (zoomLevel >= 13) {
+    formulario.style.opacity = '0.9';
+  } else if (zoomLevel >= 11) {
+    formulario.style.opacity = '0.3';
+  } else {
+    formulario.style.opacity = '0'; // Opcional: ocultar si aleja mucho
+    formulario.style.pointerEvents = 'none';
+  }
+
+  zoomAnterior = zoomLevel;
+});
+
 
     map.on('click', async (e) => {
       const lngLat = [e.lngLat.lng, e.lngLat.lat];
@@ -172,6 +254,22 @@ if (datos.recargoConfortValor > 0) {
   safeSetText("recargo", ""); // limpia si no aplica recargo
 }
 
+// ✅ Guardar los datos reales del viaje para emitirlos luego por socket
+window.datosViajeFinal = {
+  puntoA,
+  puntoB: puntoBs[0], // solo el primer destino por ahora
+  distanciaKm,
+  duracionTexto,
+  tipoServicio,
+  precioLocal: datos.precioLocal,
+  precioUSD: datos.precioUSD,
+  moneda: datos.moneda,
+  tasaCambio: datos.tasaCambio,
+  recargoTexto: datos.recargoConfortTexto || null,
+  pais: datos.pais,
+};
+
+
 
 
 
@@ -213,8 +311,13 @@ window.eliminarUltimoDestino = function () {
     ultimoMarcador.remove();
     puntoBs.pop();
     document.getElementById('destino').value = "";
-    actualizarRuta();
+
+    // 🧼 Limpiar distancia y duración
     safeSetText("distancia", "");
+    safeSetText("distanciaInfo", "");
+    safeSetText("duracion", "");
+
+    actualizarRuta();
   }
 };
 
@@ -232,7 +335,16 @@ window.reiniciarMapa = function () {
 
   document.getElementById('origen').value = "";
   document.getElementById('destino').value = "";
+
+  // 🧼 Limpiar distancia y duración
+  safeSetText("distancia", "");
+  safeSetText("distanciaInfo", "");
+  safeSetText("duracion", "");
+
+  safeHide("viajeInfo");
+  safeHide("btnSolicitar");
 };
+
 
 async function obtenerDireccion(lng, lat) {
   try {
@@ -319,4 +431,16 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('servicio')?.addEventListener('change', () => {
   actualizarRuta(); // 👈 vuelve a recalcular todo si cambias el tipo de servicio
 });
+});
+
+document.getElementById("btnSolicitar")?.addEventListener("click", () => {
+  if (!window.datosViajeFinal) {
+    alert("❌ Primero debes trazar una ruta.");
+    return;
+  }
+
+  socket.emit("solicitud-viaje", window.datosViajeFinal);
+  console.log("📨 Emitiendo datos reales al conductor:", window.datosViajeFinal);
+
+  alert("✅ Solicitud enviada al conductor.");
 });

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Panel del Conductor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- 🎨 Estilos de Mapbox -->
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    #map {
+      width: 100%;
+      height: 100vh;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 🎵 Sonido de notificación (usado por AudioContext) -->
+  <audio id="sonidoSolicitud" preload="auto">
+    <source src="sonidos/new-notification-022-370046.mp3" type="audio/mpeg" />
+    Tu navegador no soporta audio HTML5.
+  </audio>
+
+  <!-- PERFIL DEL CONDUCTOR CON NOMBRE Y BOTÓN -->
+  <div id="perfil-conductor" style="
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(30, 30, 30, 0.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 20px 30px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    color: white;
+    font-family: 'Segoe UI', sans-serif;
+    z-index: 10;
+    text-align: center;
+    max-width: 320px;
+    width: 90%;
+    border: 1px solid rgba(255,255,255,0.1);
+  ">
+    <h3 style="margin: 0 0 10px;">🧑‍✈️ Miguel Pérez</h3>
+    <p><strong>Placa:</strong> ABC123</p>
+    <p><strong>Modelo:</strong> Chevrolet Spark GT</p>
+    <button onclick="cambiarEstadoConductor()" id="estado-btn" style="
+      margin-top: 10px;
+      padding: 10px 20px;
+      background-color: #00C853;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    ">🟢 Conectarme</button>
+  </div>
+
+  <!-- ✅ Tarjeta de solicitud de viaje -->
+  <div id="solicitudRecibida" style="display:none;
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 20px;
+    border-radius: 16px;
+    z-index: 999;
+    width: 300px;
+    font-family: 'Segoe UI', sans-serif;
+  ">
+    <h3>📩 Nueva Solicitud de Viaje</h3>
+    <div id="infoViajeConductor"></div>
+    <p id="temporizador" style="margin-top: 10px;"></p>
+
+    <button onclick="aceptarViaje()" style="
+      margin-top: 10px;
+      padding: 10px 20px;
+      background-color: #00c853;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    ">✅ Aceptar Viaje</button>
+  </div>
+
+  <!-- 🗺️ Contenedor del mapa -->
+  <div id="map"></div>
+
+  <!-- 🧠 Script de Mapbox -->
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+  <script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoibWlndWktMjUiLCJhIjoiY21kNjloMml6MDcyazJtb2xjNWNlcjJqYyJ9.IwxuSLB-7rc-c4jHaYKITg';
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+
+        const map = new mapboxgl.Map({
+          container: 'map',
+          style: 'mapbox://styles/mapbox/navigation-night-v1',
+          center: [longitude, latitude],
+          zoom: 13
+        });
+
+        new mapboxgl.Marker({ color: 'blue' })
+          .setLngLat([longitude, latitude])
+          .addTo(map);
+      },
+      (error) => {
+        console.error('Error obteniendo ubicación:', error);
+        alert('No se pudo obtener tu ubicación. Verifica que el navegador tenga permisos.');
+      }
+    );
+  </script>
+
+  <!-- Cliente de socket.io -->
+  <script src="/socket.io/socket.io.js"></script>
+
+  <!-- Script principal del conductor -->
+  <script src="/scripts/conductor.js"></script>
+
+</body>
+</html>

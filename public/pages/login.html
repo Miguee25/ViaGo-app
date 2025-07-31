@@ -14,12 +14,12 @@
       <input type="password" id="clave" placeholder="Contraseña" required><br>
       <button type="submit">Entrar</button>
       <button class="btn-principal" onclick="window.location.href='bienvenida.html'">⬅ Volver</button>
-
     </form>
 
     <p id="mensaje"></p>
   </div>
 
+  <!-- ✅ Script movido al final -->
   <script>
     document.getElementById('form-login').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -38,9 +38,15 @@
       const data = await respuesta.json();
       document.getElementById('mensaje').innerText = data.mensaje;
 
+      console.log('🔍 Tipo de usuario:', data.tipo); // Para depuración
+
       if (data.exito) {
         setTimeout(() => {
-          window.location.href = '/pages/mapa.html';
+          if (data.tipo?.trim().toLowerCase() === 'conductor') {
+            window.location.href = '/pages/conductor.html';
+          } else {
+            window.location.href = '/pages/mapa.html';
+          }
         }, 1000);
       }
     });

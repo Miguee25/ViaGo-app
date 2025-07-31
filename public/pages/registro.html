@@ -13,6 +13,14 @@
       <input type="text" id="nombre" placeholder="Tu nombre" required><br>
       <input type="email" id="correo" placeholder="Correo Electrónico" required><br>
       <input type="password" id="clave" placeholder="Contraseña" required><br>
+
+      <label for="tipo">Tipo de usuario</label><br>
+      <select id="tipo" required>
+        <option value="">-- Selecciona una opción --</option>
+        <option value="pasajero">🧍 Pasajero</option>
+        <option value="conductor">🚗 Conductor</option>
+      </select><br><br>
+
       <button type="submit">Registrarme</button>
     </form>
 
@@ -22,9 +30,6 @@
       ¿Ya tienes cuenta?
       <a href="login.html" class="boton-volver">Inicia sesión</a>
     </p>
-
-
-
   </div>
 
   <script>
@@ -34,13 +39,19 @@
       const nombre = document.getElementById('nombre').value;
       const correo = document.getElementById('correo').value;
       const clave = document.getElementById('clave').value;
+      const tipo = document.getElementById('tipo').value;
 
       const respuesta = await fetch('/registro', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ nombre, correo, clave })
+        body: JSON.stringify({
+          nombre,
+          correo,
+          contraseña: clave, // ✅ CORREGIDO
+          tipo
+        })
       });
 
       const data = await respuesta.json();
